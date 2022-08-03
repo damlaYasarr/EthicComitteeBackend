@@ -25,14 +25,16 @@ namespace Business.Abstract
         //başvuru sayfasındaki istekler
         void DeleteApply(Users user);//başvuru sil
         List<Users> GetApplyforStudent();//tarih-başlık-durum-karar işlem
-        
+        //burası çalışan metot
+        List<PersonalInfo> GetUserDetails();
 
+       
         //başvuru detayları üst üste gelen doldurma sayfası-- update detail dersek yine bu sayfalara dönmeliyiz
         void addPersonalInfo(PersonalInfo personalInfo);
         void addApplicationInfo(Users user);
         void addFile(Users user);
         //başvuruları düzenle dersek alttaki üç metodu sırasıyla gezmeli
-        void updatePersonalInfo(Users users); 
+        void updatePersonalInfo(Users users); //aynı kişinin blgileri gelmeli. 
         void updateApplicationInfo(Users users);
         void updateFile(Users users);
 

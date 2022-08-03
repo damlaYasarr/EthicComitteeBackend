@@ -61,9 +61,32 @@ namespace Core.Concrete.EntityFramework
             throw new NotImplementedException();
         }
 
-        public List<PersonalInfo> GetUserDetailDtos()
+        public List<PersonalInfo> getPersonalInfo()
         {
             throw new NotImplementedException();
+        }
+        //burası çalışan metot
+        public List<PersonalInfo> GetUserDetailDtos()
+        {
+            using (EtikContext context = new EtikContext())
+            {
+                var result = from p in context.users
+                             //join u in context.unvan on p.Unvan equals u.id into ux
+                             //from u in ux.DefaultIfEmpty()
+                             select new PersonalInfo
+                             {
+                                 Id = p.Id,
+                                 Ad = p.Ad,
+                                 Soyad = p.Soyad,
+                                 //Unvan = u.Unvan,
+                                 Uzmanlık_Alani = p.Uzmanlık_Alani,
+                                 Kurumu = p.Kurumu
+                             };
+               
+                return  result.ToList();
+
+            }
+           
         }
 
         public void Login(Users user)

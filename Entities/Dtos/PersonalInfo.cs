@@ -12,7 +12,7 @@ namespace Entities.Dtos
         public string Ad { get; set; }
         public string Soyad { get; set; }
         public string Unvan { get; set; }
-        public string UzmanlıkAlanı { get; set; }
+        public string Uzmanlık_Alani { get; set; }
         public string Kurumu { get; set; }
         //public DateTime DogumTarihi { get; set; }
         //public string Tckn { get; set; }

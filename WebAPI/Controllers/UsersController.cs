@@ -50,6 +50,13 @@ namespace WebAPI.Controllers
           _userService.addPersonalInfo(users);
             return Ok("eklenme başarılı");
         }
+        //burası çalışan metot
+        [HttpGet("getpersonalinfo")]
+        public ActionResult getpersonal()
+        {
+          var result =  _userService.GetUserDetails();
+            return Ok(result);
+        }
         /*
         [HttpPost("userdelete")]
         public IActionResult DeleteUser(Users users)

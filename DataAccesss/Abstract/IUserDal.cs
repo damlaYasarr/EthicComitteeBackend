@@ -15,6 +15,7 @@ namespace DataAccesss.Abstract
         void add(Users user);
         void update(Users user);
         void delete(Users user);
+        List<PersonalInfo> getPersonalInfo();
         //void add(ApplyInfo applyInfo);
 
     }

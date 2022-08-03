@@ -1,8 +1,8 @@
 ﻿using Business.Abstract;
-
-using Core.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.Dtos;
+using Core.Concrete.EntityFramework;
+
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,11 +12,18 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using EntityState = System.Data.Entity.EntityState;
+using DataAccesss.Abstract;
 
 namespace Business.Concrete
 {
     public class IUserManager : IUserService
     {
+        IUserDal _IUserdal;
+        public IUserManager(IUserDal IUserdal)
+        {
+            _IUserdal = IUserdal;
+        }
+
         public void addApplicationInfo(Users user)
         {
             throw new NotImplementedException();
@@ -29,7 +36,15 @@ namespace Business.Concrete
 
         public void addPersonalInfo(PersonalInfo personalInfo)
         {
-            throw new NotImplementedException();
+            Users user = new Users()
+            {
+                Ad = personalInfo.Ad,
+                Soyad = personalInfo.Soyad,
+                Unvan = personalInfo.Unvan,
+                Uzmanlık_Alani = personalInfo.Uzmanlık_Alani,
+                Kurumu = personalInfo.Kurumu
+            };
+            _IUserdal.add(user);
         }
 
         public void changeProjectstatus(Users user)
@@ -70,6 +85,12 @@ namespace Business.Concrete
         public int getConfirmationCount()
         {
             throw new NotImplementedException();
+        }
+        //burası çalışan metot
+        public List<PersonalInfo> GetUserDetails()
+        {
+            return _IUserdal.GetUserDetailDtos();
+
         }
 
         public void updateApplicationInfo(Users users)

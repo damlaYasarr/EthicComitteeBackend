@@ -8,5 +8,6 @@ namespace Entities.Dtos
 {
     public class ApplyDetailInfo
     {
+
     }
 }

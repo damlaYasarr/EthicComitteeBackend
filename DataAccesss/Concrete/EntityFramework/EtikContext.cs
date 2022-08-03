@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Emit;
@@ -36,12 +35,12 @@ namespace Core.Concrete.EntityFramework
     
         
         //veritabanındaki tabloların isimlerini alttaki metotla eşleştirmiş olduk
-        public System.Data.Entity.DbSet<Users> users { get; set; }
-        public System.Data.Entity.DbSet<ApplyTable> basvuru { get; set; }
-        public System.Data.Entity.DbSet<Calisma_alani> calisma_alani { get; set; }
-        public System.Data.Entity.DbSet<EtikKurul> etik_kurul { get; set; }
-        public System.Data.Entity.DbSet<Role> unvan { get; set; }
-        public System.Data.Entity.DbSet<OgrenimDurumu> ogrenim_durumu { get; set; }
-        public System.Data.Entity.DbSet<Users> user_types { get; set; }
+        public DbSet<Users> users { get; set; }
+        public DbSet<ApplyTable> basvuru { get; set; }
+        public DbSet<Calisma_alani> calisma_alani { get; set; }
+        public DbSet<EtikKurul> etik_kurul { get; set; }
+        public DbSet<Role> unvan { get; set; }
+        public DbSet<OgrenimDurumu> ogrenim_durumu { get; set; }
+        public DbSet<Users> user_types { get; set; }
     }
 }
