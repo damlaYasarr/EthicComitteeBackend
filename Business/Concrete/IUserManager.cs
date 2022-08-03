@@ -17,7 +17,74 @@ namespace Business.Concrete
 {
     public class IUserManager : IUserService
     {
+        public void addApplicationInfo(Users user)
+        {
+            throw new NotImplementedException();
+        }
 
-       
+        public void addFile(Users user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void addPersonalInfo(PersonalInfo personalInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void changeProjectstatus(Users user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Users controlToken(Users user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteApply(Users user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Users> GetAll(Expression<Func<Users, bool>> filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int getApplicationCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ApplyTable> GetApply(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Users> GetApplyforStudent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int getConfirmationCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void updateApplicationInfo(Users users)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void updateFile(Users users)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void updatePersonalInfo(Users users)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
