@@ -12,10 +12,13 @@ namespace DataAccesss.Abstract
     {
         List<PersonalInfo> GetUserDetailDtos();
         List<Users> GetClaims(Users user);
-        void add(Users user);
-        void update(Users user);
-        void delete(Users user);
+        void add(PersonalInfo user);
+        void add(ApplyInfo applyinfo);
+        void update(PersonalInfo user);
+        void delete(PersonalInfo user);
         List<PersonalInfo> getPersonalInfo();
+        void add(Users user);
+        void add(ApplyTable applyTable);    
         //void add(ApplyInfo applyInfo);
 
     }

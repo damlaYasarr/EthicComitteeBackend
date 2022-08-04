@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class Role
-    {//user types olarak yer alır
+    public class IlTable
+    {
         [Key]
         public int id { get; set; }
+        public string il_adi { get; set; }
 
-        public string type_name { get; set; }
-
-        public ICollection<Users> users { get; set; }
-
+        public ICollection<KurumTable> KurumTable { get; set; }
     }
 }

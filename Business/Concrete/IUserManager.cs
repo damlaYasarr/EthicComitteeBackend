@@ -24,9 +24,23 @@ namespace Business.Concrete
             _IUserdal = IUserdal;
         }
 
-        public void addApplicationInfo(Users user)
+
+
+        public void addApplicationInfo(ApplyInfo applyInfo)
         {
-            throw new NotImplementedException();
+           
+            ApplyTable applyInfo1= new ApplyTable()  
+              {
+                  Id = applyInfo.id,
+                  Etikkuruls = new EtikKurul() { Id = applyInfo.Etik_Kurul_Id },
+                  Baslik = applyInfo.Baslik,
+                  Ozet = applyInfo.Ozet,
+                  Aciklama = applyInfo.Aciklama
+              };
+
+                _IUserdal.add(applyInfo1);
+            
+            
         }
 
         public void addFile(Users user)
@@ -40,7 +54,7 @@ namespace Business.Concrete
             {
                 Ad = personalInfo.Ad,
                 Soyad = personalInfo.Soyad,
-                Unvan = personalInfo.Unvan,
+                Unvan=personalInfo.Unvan_id, //BAŞKA TABLODAN ÇEKERKEN İDD'LERDEN BİRLEŞTİRDİK
                 Uzmanlık_Alani = personalInfo.Uzmanlık_Alani,
                 Kurumu = personalInfo.Kurumu
             };
@@ -86,6 +100,12 @@ namespace Business.Concrete
         {
             throw new NotImplementedException();
         }
+
+        public void getFile(Users user)
+        {
+            throw new NotImplementedException();
+        }
+
         //burası çalışan metot
         public List<PersonalInfo> GetUserDetails()
         {

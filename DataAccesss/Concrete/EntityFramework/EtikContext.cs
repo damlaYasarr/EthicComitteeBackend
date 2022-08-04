@@ -21,26 +21,23 @@ namespace Core.Concrete.EntityFramework
            
             Console.WriteLine("dbbağlandı");
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Users>()
-           .HasOne(e => e.applytable)
-           .WithMany(c => c.Users);
 
-            modelBuilder.Entity<ApplyTable>()
-           .HasOne(e => e.etikkurul)
-           .WithMany(c => c.Applytable);
 
-        }
-    
-        
+
         //veritabanındaki tabloların isimlerini alttaki metotla eşleştirmiş olduk
         public DbSet<Users> users { get; set; }
         public DbSet<ApplyTable> basvuru { get; set; }
         public DbSet<Calisma_alani> calisma_alani { get; set; }
         public DbSet<EtikKurul> etik_kurul { get; set; }
-        public DbSet<Role> unvan { get; set; }
+        public DbSet<Unvan> unvan { get; set; }
         public DbSet<OgrenimDurumu> ogrenim_durumu { get; set; }
         public DbSet<Users> user_types { get; set; }
+        public DbSet<IlTable> il_tables { get; set; }
+        public DbSet<Parola> parola { get; set; }
+        public DbSet<StatusTable> status_table { get; set; }
+        public DbSet<KurumTable> kurum_table { get; set; }
+
+
+
     }
 }

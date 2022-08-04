@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Entities.Concrete
@@ -12,25 +13,32 @@ namespace Entities.Concrete
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("User_Id")]
-        public int User_Id { get; set; }
         public string Baslik { get; set; }
-
         public string Ozet { get; set; }
         public string Aciklama { get; set; }
-
-        public DateTime zaman { get; set; }
+        public DateTime Zaman_Damgası { get; set; }
         //public File Word { get; set; }
+       
+        public byte[] basvuru_formu { get; set; }
+        public byte[] basvuru_dilekcesi { get; set; }
+        public byte[] gonullu_katilim_formu { get; set; }
+        public byte[] degerlendirme_formu { get; set; }
+        public byte[] taahhütname { get; set; }
+        public byte[] yukseklisand_doktora_basvuru { get; set; }
+        public byte[] evrak_kontrol_cizelgesi { get; set; }
 
 
-        [ForeignKey("etikkurul")]
-        public int? etikkurulID { get; set; }
-        [ForeignKey("calismalanı")]
-        public int? calismaalaniID { get; set; }
+        public int User_Id { get; set; } //basvuru tablosu 
+        public int Onerilen_Etik_Kurulu { get; set; } //etik kurulu tablosu
+        public int status { get; set; }//status tablosu
+        public int Calisma_Alanı { get; set; } //calisma alanı
 
-        public virtual EtikKurul etikkurul { get; set; }
-        public virtual Calisma_alani calismalanı { get; set; }
-        //buranın id'leri ile classların id'leri aynı olmalı 
+        public StatusTable statustable { get; set; }
+      
+        public EtikKurul Etikkuruls { get; set; }
+      
+        public  Calisma_alani calismalanı { get; set; }
+       
        
         public ICollection<Users> Users { get; set; }
     }

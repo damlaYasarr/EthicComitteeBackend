@@ -12,14 +12,51 @@ using System.Threading.Tasks;
 
 namespace Core.Concrete.EntityFramework
 {
-    public class EfUserDal :IUserDal
+    public class EfUserDal : IUserDal
     {
+        public void add(PersonalInfo personalInfo)
+        {
+            using (EtikContext context = new EtikContext())
+            {   //get the info from resource 
+                var addEntitiy = context.Entry(personalInfo);
+                addEntitiy.State = EntityState.Added;
+                context.SaveChanges();
+            }
+        }
+
         public void add(Users user)
+        {
+            using (EtikContext context = new EtikContext())
+            {   //get the info from resource 
+                var addEntitiy = context.Entry(user);
+                addEntitiy.State = EntityState.Added;
+                context.SaveChanges();
+            }
+        }
+
+       
+
+        public void add(ApplyTable applyTable)
+        {
+            using (EtikContext context = new EtikContext())
+            {
+                //db den include gibi bir bilgi eklenecek sanırım 
+
+                var result = context.basvuru.Include(x => x.Id).Include(y => y.Etikkuruls.Id)
+                    .Select new ApplyTable
+                {
+
+                }
+                
+            }
+        }
+
+        public void add(ApplyInfo applyinfo)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Users user)
+        public void delete(PersonalInfo user)
         {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 
@@ -27,11 +64,6 @@ namespace Core.Concrete.EntityFramework
                 deletedEntity.State = EntityState.Deleted;
                 context.SaveChanges();
             }
-        }
-
-        public void delete(Users user)
-        {
-            throw new NotImplementedException();
         }
 
         public Users Get(Expression<Func<Users, bool>> filter = null)
@@ -71,8 +103,8 @@ namespace Core.Concrete.EntityFramework
             using (EtikContext context = new EtikContext())
             {
                 var result = from p in context.users
-                             //join u in context.unvan on p.Unvan equals u.id into ux
-                             //from u in ux.DefaultIfEmpty()
+                                 //join u in context.unvan on p.Unvan equals u.id into ux
+                                 //from u in ux.DefaultIfEmpty()
                              select new PersonalInfo
                              {
                                  Id = p.Id,
@@ -80,32 +112,21 @@ namespace Core.Concrete.EntityFramework
                                  Soyad = p.Soyad,
                                  //Unvan = u.Unvan,
                                  Uzmanlık_Alani = p.Uzmanlık_Alani,
-                                 Kurumu = p.Kurumu
+                                 Kurumu=p.Kurumu //başka tablodan çekerken id'lerden birleştirriz
                              };
-               
-                return  result.ToList();
+
+                return result.ToList();
 
             }
-           
-        }
 
-        public void Login(Users user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Register(Users user)
-        {//IDısposable pattern implementation of c# for research "using"
-            using (EtikContext context = new EtikContext())
-            {   //get the info from resource 
-                var addedEntity = context.Entry(user);
-                addedEntity.State = EntityState.Added;
-                context.SaveChanges();
-            }
         }
 
 
-        public void Update(Users user)
+
+
+
+
+        public void update(PersonalInfo user)
         {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 
@@ -113,11 +134,6 @@ namespace Core.Concrete.EntityFramework
                 updatedEntity.State = EntityState.Modified;
                 context.SaveChanges();
             }
-        }
-
-        public void update(Users user)
-        {
-            throw new NotImplementedException();
         }
     }
 }

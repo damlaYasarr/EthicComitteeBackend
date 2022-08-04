@@ -50,6 +50,12 @@ namespace WebAPI.Controllers
           _userService.addPersonalInfo(users);
             return Ok("eklenme başarılı");
         }
+        [HttpPost("postapp")]
+        public ActionResult PostApplyInfo(ApplyInfo applyInfo)
+        {
+            _userService.addApplicationInfo(applyInfo);
+            return Ok("application ekleme başarılı");
+        }
         //burası çalışan metot
         [HttpGet("getpersonalinfo")]
         public ActionResult getpersonal()

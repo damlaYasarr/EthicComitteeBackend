@@ -9,12 +9,11 @@ namespace Entities.Dtos
 {
     public class ApplyInfo
     {
-        public int Id { get; set; }
-        [ForeignKey("User_Id")]
-        public int User_Id { get; set; }
-        public string Baslik { get; set; }
-
-        public string Ozet { get; set; }
-        public string Aciklama { get; set; }
+        public int id { get; set; }
+        public int Etik_Kurul_Id { get; set; }//başvurulack etik kurul
+        public string Baslik { get; set; }//applytable
+       // public string ArastirmaNteligi { get; set; } -> Araştırma niteliği tablosu olması lazım
+        public string Ozet { get; set; }//applytable
+        public string Aciklama { get; set; }//applytable
     }
 }

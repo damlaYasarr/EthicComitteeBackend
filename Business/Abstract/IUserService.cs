@@ -31,8 +31,9 @@ namespace Business.Abstract
        
         //başvuru detayları üst üste gelen doldurma sayfası-- update detail dersek yine bu sayfalara dönmeliyiz
         void addPersonalInfo(PersonalInfo personalInfo);
-        void addApplicationInfo(Users user);
-        void addFile(Users user);
+        void addApplicationInfo(ApplyInfo applyInfo);
+        void addFile(Users user);//7 tane word dosyası eklenir sırayla-- bu
+        void getFile(Users user);//bu işlemde 7 word dosyası bir pdf'e dönüşür.
         //başvuruları düzenle dersek alttaki üç metodu sırasıyla gezmeli
         void updatePersonalInfo(Users users); //aynı kişinin blgileri gelmeli. 
         void updateApplicationInfo(Users users);
