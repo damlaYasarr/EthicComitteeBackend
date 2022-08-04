@@ -53,8 +53,8 @@ namespace WebAPI.Controllers
         [HttpPost("postapp")]
         public ActionResult PostApplyInfo(ApplyInfo applyInfo)
         {
-            _userService.addApplicationInfo(applyInfo);
-            return Ok("application ekleme başarılı");
+             _userService.addApplicationInfo(applyInfo);
+            return Ok();
         }
         //burası çalışan metot
         [HttpGet("getpersonalinfo")]

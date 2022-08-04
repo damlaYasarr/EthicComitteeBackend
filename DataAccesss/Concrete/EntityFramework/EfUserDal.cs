@@ -37,16 +37,13 @@ namespace Core.Concrete.EntityFramework
        
 
         public void add(ApplyTable applyTable)
-        {
+        {//veritabanında görünmüyo
             using (EtikContext context = new EtikContext())
             {
                 //db den include gibi bir bilgi eklenecek sanırım 
 
-                var result = context.basvuru.Include(x => x.Id).Include(y => y.Etikkuruls.Id)
-                    .Select new ApplyTable
-                {
-
-                }
+                var result = context.basvuru.Include(x => x.Id).Include(y => y.Etikkuruls.Id);
+                context.SaveChanges();
                 
             }
         }
