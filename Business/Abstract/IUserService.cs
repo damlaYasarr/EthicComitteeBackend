@@ -26,24 +26,24 @@ namespace Business.Abstract
         void DeleteApply(Users user);//başvuru sil
         List<Users> GetApplyforStudent();//tarih-başlık-durum-karar işlem
         //burası çalışan metot
-        List<PersonalInfo> GetUserDetails();
+        List<PersonalInfoDto> GetUserDetails();
 
        
         //başvuru detayları üst üste gelen doldurma sayfası-- update detail dersek yine bu sayfalara dönmeliyiz
-        void addPersonalInfo(PersonalInfo personalInfo);
-        void addApplicationInfo(ApplyInfo applyInfo);
+        void addPersonalInfo(PersonalInfoDto personalInfo);
+        void addApplicationInfo(ApplyInfoDto applyInfo);
         void addFile(Users user);//7 tane word dosyası eklenir sırayla-- bu
         void getFile(Users user);//bu işlemde 7 word dosyası bir pdf'e dönüşür.
         //başvuruları düzenle dersek alttaki üç metodu sırasıyla gezmeli
-        void updatePersonalInfo(Users users); //aynı kişinin blgileri gelmeli. 
-        void updateApplicationInfo(Users users);
+        void updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. 
+        void updateApplicationInfo(ApplyInfoDto applyInfo);
         void updateFile(Users users);
 
 
         //adminin yapacağı işlemler
         List<Users> GetAll(Expression<Func<Users, bool>> filter = null);//userları getir
         void changeProjectstatus(Users user); //admin kullanıcının başvurusnun durumunu günceller
-        List<ApplyTable> GetApply(int id); //tm başvuruları getir-admin için--USER'IN BAŞVURULARINI GETİR
+        List<Basvuru> GetApply(int id); //tm başvuruları getir-admin için--USER'IN BAŞVURULARINI GETİR
 
     }
 }

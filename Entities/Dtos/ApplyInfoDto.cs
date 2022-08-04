@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Entities.Dtos
 {
-    public class ApplyInfo
-    {
+    public class ApplyInfoDto
+    {   
         public int id { get; set; }
+        public int user_id { get; set; }//user id de eklenmel
         public int Etik_Kurul_Id { get; set; }//başvurulack etik kurul
         public string Baslik { get; set; }//applytable
-       // public string ArastirmaNteligi { get; set; } -> Araştırma niteliği tablosu olması lazım
+        //public int Uzmanlık_alani { get; set; }
         public string Ozet { get; set; }//applytable
         public string Aciklama { get; set; }//applytable
+        public int arastirma_niteligi_id { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace Core.Concrete.EntityFramework
 
         //veritabanındaki tabloların isimlerini alttaki metotla eşleştirmiş olduk
         public DbSet<Users> users { get; set; }
-        public DbSet<ApplyTable> basvuru { get; set; }
+        public DbSet<Basvuru> basvuru { get; set; }
         public DbSet<Calisma_alani> calisma_alani { get; set; }
         public DbSet<EtikKurul> etik_kurul { get; set; }
         public DbSet<Unvan> unvan { get; set; }
@@ -36,6 +36,7 @@ namespace Core.Concrete.EntityFramework
         public DbSet<Parola> parola { get; set; }
         public DbSet<StatusTable> status_table { get; set; }
         public DbSet<KurumTable> kurum_table { get; set; }
+        public DbSet<ArastirmaNiteligi> arastirma_niteligi { get; set; }
 
 
 

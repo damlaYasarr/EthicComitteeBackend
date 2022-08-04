@@ -14,7 +14,5 @@ namespace Entities.Concrete
 
         public string unvan_adi { get; set; }
 
-        public ICollection<Users> users { get; set; }
-
     }
 }

@@ -12,6 +12,6 @@ namespace Entities.Concrete
         [Key]
         public int Id { get; set; }
         public string Calisma_Alani_Adi { get; set; }
-        public ICollection<ApplyTable> ApplyTables { get; set; }
+      
     }
 }

@@ -45,16 +45,16 @@ namespace WebAPI.Controllers
             return BadRequest(result.Success);
         }*/
         [HttpPost("addguest")]
-        public ActionResult AddNewGuest(PersonalInfo users)
+        public ActionResult AddNewGuest(PersonalInfoDto users)
         {
           _userService.addPersonalInfo(users);
             return Ok("eklenme başarılı");
         }
         [HttpPost("postapp")]
-        public ActionResult PostApplyInfo(ApplyInfo applyInfo)
+        public ActionResult PostApplyInfo(ApplyInfoDto applyInfo)
         {
              _userService.addApplicationInfo(applyInfo);
-            return Ok();
+            return Ok("ekleme başrılı");
         }
         //burası çalışan metot
         [HttpGet("getpersonalinfo")]

@@ -1,5 +1,4 @@
 ﻿
-using DataAccesss.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -12,48 +11,56 @@ using System.Threading.Tasks;
 
 namespace Core.Concrete.EntityFramework
 {
-    public class EfUserDal : IUserDal
+    public class EfUserDal
     {
-        public void add(PersonalInfo personalInfo)
-        {
-            using (EtikContext context = new EtikContext())
-            {   //get the info from resource 
-                var addEntitiy = context.Entry(personalInfo);
-                addEntitiy.State = EntityState.Added;
-                context.SaveChanges();
-            }
-        }
+      
 
         public void add(Users user)
         {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 
-                var addEntitiy = context.Entry(user);
-                addEntitiy.State = EntityState.Added;
+               
                 context.SaveChanges();
             }
         }
+      
 
-       
 
-        public void add(ApplyTable applyTable)
+
+        public void add(ApplyInfoDto b)
         {//veritabanında görünmüyo
-            using (EtikContext context = new EtikContext())
-            {
-                //db den include gibi bir bilgi eklenecek sanırım 
+          
+           
+                using (EtikContext context = new EtikContext())
+                {   //get the info from resource 
 
-                var result = context.basvuru.Include(x => x.Id).Include(y => y.Etikkuruls.Id);
-                context.SaveChanges();
+                Basvuru bsr = new Basvuru()
+                {
+                    Id = b.id,
+                    User_Id = b.user_id,
+                    Baslik=b.Baslik,
+                    Ozet=b.Ozet,
+                    Aciklama=b.Aciklama
+                    
+                    
+                };
+                    context.basvuru.Add(bsr);
+                  
+                    context.SaveChanges();
+                }
+              
                 
-            }
+            
         }
 
-        public void add(ApplyInfo applyinfo)
+        public void add(PersonalInfoDto user)
         {
             throw new NotImplementedException();
         }
 
-        public void delete(PersonalInfo user)
+       
+
+        public void delete(PersonalInfoDto user)
         {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 
@@ -90,40 +97,20 @@ namespace Core.Concrete.EntityFramework
             throw new NotImplementedException();
         }
 
-        public List<PersonalInfo> getPersonalInfo()
+        public List<PersonalInfoDto> getPersonalInfo()
         {
             throw new NotImplementedException();
         }
-        //burası çalışan metot
-        public List<PersonalInfo> GetUserDetailDtos()
-        {
-            using (EtikContext context = new EtikContext())
-            {
-                var result = from p in context.users
-                                 //join u in context.unvan on p.Unvan equals u.id into ux
-                                 //from u in ux.DefaultIfEmpty()
-                             select new PersonalInfo
-                             {
-                                 Id = p.Id,
-                                 Ad = p.Ad,
-                                 Soyad = p.Soyad,
-                                 //Unvan = u.Unvan,
-                                 Uzmanlık_Alani = p.Uzmanlık_Alani,
-                                 Kurumu=p.Kurumu //başka tablodan çekerken id'lerden birleştirriz
-                             };
 
-                return result.ToList();
 
-            }
-
-        }
+     
 
 
 
 
 
 
-        public void update(PersonalInfo user)
+        public void update(PersonalInfoDto user)
         {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 

@@ -14,8 +14,7 @@ namespace Entities.Concrete
         public int id { get; set; }
         public string kurum_adi { get; set; }
         public int il_id { get; set; }
-        public IlTable IlTable { get; set; } //İL TABLOSU
-        public ICollection<Users> users { get; set; }
+       
 
     }
 }

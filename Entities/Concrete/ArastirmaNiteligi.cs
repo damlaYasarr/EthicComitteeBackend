@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace Entities.Concrete
 {
-    public class StatusTable
+    public class ArastirmaNiteligi
     {
         [Key]
         public int id { get; set; }
-        public string status_type { get; set; }
-       
+        public string arastirma_niteligi { get; set; }
     }
 }

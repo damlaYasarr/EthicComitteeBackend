@@ -11,7 +11,7 @@ namespace Entities.Concrete
     {
         [Key]
         public int id { get; set; }
-        public string? parola { get; set; }
-        public ICollection<Users> Users { get; set; }
+        public string parola { get; set; }
+       
     }
 }

@@ -13,6 +13,6 @@ namespace Entities.Concrete
         public int id { get; set; }
         public string il_adi { get; set; }
 
-        public ICollection<KurumTable> KurumTable { get; set; }
+       
     }
 }

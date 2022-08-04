@@ -12,53 +12,63 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using EntityState = System.Data.Entity.EntityState;
-using DataAccesss.Abstract;
+
 
 namespace Business.Concrete
 {
     public class IUserManager : IUserService
     {
-        IUserDal _IUserdal;
-        public IUserManager(IUserDal IUserdal)
-        {
-            _IUserdal = IUserdal;
+
+        public void addApplicationInfo(ApplyInfoDto applyInfo)
+        {//it is DONE!
+            using (EtikContext context = new EtikContext())
+            {   //get the info from resource 
+
+                Basvuru bsr = new Basvuru()
+                {
+                    Id = applyInfo.id,
+                    User_Id = applyInfo.user_id,
+                    Onerilen_Etik_Kurulu=applyInfo.Etik_Kurul_Id,
+                    Baslik = applyInfo.Baslik,
+                    Ozet = applyInfo.Ozet,
+                    Aciklama = applyInfo.Aciklama,
+                    arastirma_niteligi_id = applyInfo.arastirma_niteligi_id
+                    
+
+                };
+                context.basvuru.Add(bsr);
+
+                context.SaveChanges();
+            }   
+            
         }
 
-
-
-        public void addApplicationInfo(ApplyInfo applyInfo)
-        {
-           
-            ApplyTable applyInfo1= new ApplyTable()  
-              {
-                  Id = applyInfo.id,
-                  Etikkuruls = new EtikKurul() { Id = applyInfo.Etik_Kurul_Id },
-                  Baslik = applyInfo.Baslik,
-                  Ozet = applyInfo.Ozet,
-                  Aciklama = applyInfo.Aciklama
-              };
-
-                _IUserdal.add(applyInfo1);
-            
-            
-        }
 
         public void addFile(Users user)
         {
             throw new NotImplementedException();
         }
 
-        public void addPersonalInfo(PersonalInfo personalInfo)
-        {
-            Users user = new Users()
-            {
-                Ad = personalInfo.Ad,
-                Soyad = personalInfo.Soyad,
-                Unvan=personalInfo.Unvan_id, //BAŞKA TABLODAN ÇEKERKEN İDD'LERDEN BİRLEŞTİRDİK
-                Uzmanlık_Alani = personalInfo.Uzmanlık_Alani,
-                Kurumu = personalInfo.Kurumu
-            };
-            _IUserdal.add(user);
+        public void addPersonalInfo(PersonalInfoDto personalInfo)
+        { //it is DONE!
+            using (EtikContext context = new EtikContext())
+            {   //get the info from resource 
+                Users user = new Users()
+                {
+                    Id  =  personalInfo.Id,
+                    Ad = personalInfo.Ad,
+                    Soyad = personalInfo.Soyad,
+                    Unvan = personalInfo.Unvan_id,
+                    Uzmanlık_Alani=personalInfo.Uzmanlık_Alani,
+                    Tckn = personalInfo.Tckn,
+                    Eposta = personalInfo.Eposta,
+                    Parola_id = personalInfo.parola,
+                    Kurumu = personalInfo.Kurumu
+                };
+                context.users.Add(user);
+                context.SaveChanges();
+            }
+          
         }
 
         public void changeProjectstatus(Users user)
@@ -86,7 +96,7 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public List<ApplyTable> GetApply(int id)
+        public List<Basvuru> GetApply(int id)
         {
             throw new NotImplementedException();
         }
@@ -106,10 +116,27 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        //burası çalışan metot
-        public List<PersonalInfo> GetUserDetails()
+        //is it DONE!
+        public List<PersonalInfoDto> GetUserDetails()
         {
-            return _IUserdal.GetUserDetailDtos();
+            using (EtikContext context = new EtikContext())
+            {
+                var result = from p in context.users
+                             join u in context.unvan on p.Unvan equals u.id into ux
+                             from u in ux.DefaultIfEmpty()
+                             select new PersonalInfoDto
+                             {
+                                 Id = p.Id,
+                                 Ad = p.Ad,
+                                 Soyad = p.Soyad,
+                                 Unvan_id = u.id,
+                                 //uzmanlık alanı olmalı
+                                 Kurumu = (int)p.Kurumu //başka tablodan çekerken id'lerden birleştirriz
+                             };
+
+                return result.ToList();
+
+            }
 
         }
 
@@ -118,12 +145,14 @@ namespace Business.Concrete
             throw new NotImplementedException();
         }
 
-        public void updateFile(Users users)
+      
+
+        public void updatePersonalInfo(Users users)
         {
             throw new NotImplementedException();
         }
 
-        public void updatePersonalInfo(Users users)
+        public void updateFile(Users users)
         {
             throw new NotImplementedException();
         }
