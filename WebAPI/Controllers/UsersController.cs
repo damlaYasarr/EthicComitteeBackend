@@ -19,31 +19,41 @@ namespace WebAPI.Controllers
             _userService = userService;
 
         }
-        /*
-    [HttpGet("getall")]
-     public IActionResult GetAll()
-        {  //dependency chain
-            var result = _userService.GetAll();
-            if (result.Success)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Message);
-            }
-           
-        }
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int userid)
+
+        /*[HttpGet("getall")]
+         public IActionResult GetAll()
+            {  //dependency chain
+                var result = _userService.GetAll();
+                if (result.Success)
+                {
+                    return Ok(result.Data);
+                }
+                else
+                {
+                    return BadRequest(result.Message);
+                }
+
+            }*/
+        [HttpPost("updateApplylInfo")]
+        public IActionResult updateApplylInfo(ApplyInfoDto applyInfoDto)
         {
-            var result = _userService.GetById(userid);
+            var result = _userService.updateApplicationInfo(applyInfoDto);
             if (result.Success)
             {
-                return Ok(result.Data);
+                return Ok(result);
             }
             return BadRequest(result.Success);
-        }*/
+        }
+        [HttpPost("updatePersonalInfo")]
+        public IActionResult updatePersonalInfo(PersonalInfoDto personalInfoDto)
+        {
+            var result = _userService.updatePersonalInfo(personalInfoDto);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Success);
+        }
         [HttpPost("addguest")]
         public ActionResult AddNewGuest(PersonalInfoDto users)
         {
@@ -61,6 +71,12 @@ namespace WebAPI.Controllers
         public ActionResult getpersonal()
         {
           var result =  _userService.GetUserDetails();
+            return Ok(result);
+        }
+        [HttpGet("getApplicationschema")]
+        public ActionResult getApplicationschema(int user_id)
+        {
+            var result = _userService.GetApplyforStudent(user_id);
             return Ok(result);
         }
         /*

@@ -1,4 +1,5 @@
 ﻿
+using Core.Utilities.Result;
 using Entities.Concrete;
 using Entities.Dtos;
 using System;
@@ -24,26 +25,25 @@ namespace Business.Abstract
 
         //başvuru sayfasındaki istekler
         void DeleteApply(Users user);//başvuru sil
-        List<Users> GetApplyforStudent();//tarih-başlık-durum-karar işlem
-        //burası çalışan metot
-        List<PersonalInfoDto> GetUserDetails();
+        IDataResult<List<ApplicationSchemaDto>> GetApplyforStudent(int user_id);//tarih-başlık-durum-karar işlem-->DONE
+        
+        List<PersonalInfoDto> GetUserDetails();//-->DONE
 
-       
-        //başvuru detayları üst üste gelen doldurma sayfası-- update detail dersek yine bu sayfalara dönmeliyiz
-        void addPersonalInfo(PersonalInfoDto personalInfo);
-        void addApplicationInfo(ApplyInfoDto applyInfo);
+
+        void addPersonalInfo(PersonalInfoDto personalInfo);//-->DONE
+        void addApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
         void addFile(Users user);//7 tane word dosyası eklenir sırayla-- bu
-        void getFile(Users user);//bu işlemde 7 word dosyası bir pdf'e dönüşür.
-        //başvuruları düzenle dersek alttaki üç metodu sırasıyla gezmeli
-        void updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. 
-        void updateApplicationInfo(ApplyInfoDto applyInfo);
+        IResult getFile(Users user);//bu işlemde 7 word dosyası bir pdf'e dönüşür.
+       
+        IResult updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. -->DONE
+        IResult updateApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
         void updateFile(Users users);
 
 
         //adminin yapacağı işlemler
-        List<Users> GetAll(Expression<Func<Users, bool>> filter = null);//userları getir
+        List<Users> GetAll(Expression<Func<Users, bool>> filter = null);//tüm userları başvurularıyla getir getir 
         void changeProjectstatus(Users user); //admin kullanıcının başvurusnun durumunu günceller
-        List<Basvuru> GetApply(int id); //tm başvuruları getir-admin için--USER'IN BAŞVURULARINI GETİR
+        //List<Basvuru> GetApply(int id); //tm başvuruları getir-admin için--USER'IN BAŞVURULARINI GETİR
 
     }
 }

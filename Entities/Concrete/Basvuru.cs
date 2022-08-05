@@ -18,13 +18,13 @@ namespace Entities.Concrete
         public DateTime Zaman_Damgası { get; set; }
         public int? status { get; set; }
         public int? arastirma_niteligi_id { get; set; }
-         public byte [] basvuru_formu { get; set; }
-         public byte[] basvuru_dilekcesi { get; set; }
-         public byte[] gonullu_katilim_formu { get; set; }
-         public byte[] degerlendirme_formu { get; set; }
-         public byte[] taahhütname { get; set; }
-         public byte[] yukseklisand_doktora_basvuru { get; set; }
-         public byte[] evrak_kontrol_cizelgesi { get; set; }
+         public byte[]? basvuru_formu { get; set; }
+         public byte[]? basvuru_dilekcesi { get; set; }
+         public byte[]? gonullu_katilim_formu { get; set; }
+         public byte[]? degerlendirme_formu { get; set; }
+         public byte[]? taahhutname { get; set; }
+         public byte[]? yukseklisans_doktora_basvuru { get; set; }
+         public byte[]? evrak_kontrol_cizelgesi { get; set; }
 
     }
 }

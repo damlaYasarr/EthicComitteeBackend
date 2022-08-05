@@ -19,13 +19,13 @@ namespace Entities.Concrete
         public int? User_Type { get; set; }
         public string Ad { get; set; }
         public string Soyad { get; set; }
-        public int? Unvan { get; set; }
-        public int? Ogrenim_Durumu { get; set; }
-        public int? Kurumu { get; set; }
+        public int Unvan { get; set; }
+        public int Ogrenim_Durumu { get; set; }
+        public int Kurumu { get; set; }
         public string Uzmanlık_Alani { get; set; }
         // public DateTime Dogum_Tarihi { get; set; }
         public string Tckn { get; set; }
         public string Eposta { get; set; }
-        public int? Parola_id { get; set; }
+        public int Parola_id { get; set; }
     }
 }
