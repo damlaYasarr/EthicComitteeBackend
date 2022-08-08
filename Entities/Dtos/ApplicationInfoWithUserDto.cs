@@ -8,5 +8,13 @@ namespace Entities.Dtos
 {
     public class ApplicationInfoWithUserDto
     {
+        public int id { get; set; }
+        public int basvuru_id { get; set; }
+        public string baslik { get; set; }
+        public DateTime created { get; set; }   
+        public int status_id { get; set; }
+
+
+
     }
 }

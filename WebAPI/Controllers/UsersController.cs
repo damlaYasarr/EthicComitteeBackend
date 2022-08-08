@@ -20,20 +20,18 @@ namespace WebAPI.Controllers
 
         }
 
-        /*[HttpGet("getall")]
-         public IActionResult GetAll()
-            {  //dependency chain
-                var result = _userService.GetAll();
-                if (result.Success)
-                {
-                    return Ok(result.Data);
-                }
-                else
-                {
-                    return BadRequest(result.Message);
-                }
-
-            }*/
+  
+        
+    [HttpPost("changeProjectStatus")]
+        public IActionResult changeProjectstatus(int user_id, int status )
+        {
+            var result = _userService.changeProjectstatus(user_id, status);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Success);
+        }
         [HttpPost("updateApplylInfo")]
         public IActionResult updateApplylInfo(ApplyInfoDto applyInfoDto)
         {
@@ -79,12 +77,20 @@ namespace WebAPI.Controllers
             var result = _userService.GetApplyforStudent(user_id);
             return Ok(result);
         }
-        /*
-        [HttpPost("userdelete")]
-        public IActionResult DeleteUser(Users users)
+        
+        [HttpDelete("applyDelete")]
+        public IActionResult DeleteApply(int id)
         {
-            return Ok();
+           var result= _userService.DeleteApply(id);
 
-        }*/
+            return Ok(result.Success);
+
+        }
+        [HttpGet("forAdmin")]
+        public IActionResult getinfoForAdmin()
+        {
+            var result = _userService.GetAllApplicationforAdmin();
+            return Ok(result);
+        }
     }
 }

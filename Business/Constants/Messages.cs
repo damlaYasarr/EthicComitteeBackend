@@ -16,5 +16,7 @@ namespace Business.Constants
         public static string ApplyUpdatedInfo = "başvuru detayı güncellendi";
 
         public static string ApplyErrorUpdatedInfo = "başvuru bulunamadı";
+
+        public static string NotFound = "başvuru silinemedi";
     }
 }

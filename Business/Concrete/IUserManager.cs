@@ -14,14 +14,21 @@ using System.Threading.Tasks;
 using EntityState = System.Data.Entity.EntityState;
 using Core.Utilities.Result;
 using Business.Constants;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using Microsoft.Office.Interop.Word;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Grpc.Core;
+using System.IO;
 
 namespace Business.Concrete
 {
     public class IUserManager : IUserService
     {
-
+        //it is DONE!
         public void addApplicationInfo(ApplyInfoDto applyInfo)
-        {//it is DONE!
+        {
             using (EtikContext context = new EtikContext())
             {   //get the info from resource 
 
@@ -45,11 +52,6 @@ namespace Business.Concrete
         }
 
 
-        public void addFile(Users user)
-        {
-            throw new NotImplementedException();
-        }
-
         public void addPersonalInfo(PersonalInfoDto personalInfo)
         { //it is DONE!
             using (EtikContext context = new EtikContext())
@@ -71,31 +73,57 @@ namespace Business.Concrete
             }
           
         }
-
-        public void changeProjectstatus(Users user)
+        //it is Done!!
+        public IResult changeProjectstatus(int user_id, int status)
         {
-            throw new NotImplementedException();
+            using(EtikContext context=new EtikContext())
+            {
+                var result = context.basvuru.SingleOrDefault(b => b.User_Id == user_id);
+                if(result == null)
+                {
+                    return new ErrorResult("kullanıcı başvurusu bulunamadı");
+                }
+                else
+                {
+                    var xx = from r in context.basvuru
+                             join x in context.users on user_id equals x.Id
+                             join u in context.status_table on r.status equals u.id into ux
+                             from u in ux.DefaultIfEmpty()
+                             where r.Id == user_id
+                             select new ChangeProjectStatusDto
+                             {
+                                 id = r.Id,
+                                 user_id=x.Id,
+                                 status_id=u.id
+                             };
+                    context.SaveChanges();
+                }
+
+            }
+            return new SuccessResult("hey başarılı");
         }
 
-        public Users controlToken(Users user)
+       
+        //it is Done!
+        public IResult DeleteApply(int id)
         {
-            throw new NotImplementedException();
+            using (EtikContext context = new EtikContext())
+            {
+                var applydetail = context.basvuru.SingleOrDefault(b => b.Id == id);
+                if(applydetail == null)
+                {
+                    return new ErrorResult(Messages.NotFound);
+                }
+                else
+                {
+                    context.basvuru.Remove(applydetail);
+                    context.SaveChanges();
+                }
+               
+                return new SuccessResult("silinme başarılı");
+            }
         }
-
-        public void DeleteApply(Users user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Users> GetAll(Expression<Func<Users, bool>> filter = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int getApplicationCount()
-        {
-            throw new NotImplementedException();
-        }
+      
 
        
         //it is DONE!
@@ -133,10 +161,7 @@ namespace Business.Concrete
 
         }
 
-        public int getConfirmationCount()
-        {
-            throw new NotImplementedException();
-        }
+       
 
        
 
@@ -164,17 +189,7 @@ namespace Business.Concrete
 
         }
 
-      
-
-        public void updateFile(Users users)
-        {
-            throw new NotImplementedException();
-        }
-
-       public  IResult getFile(Users user)
-        {
-            throw new NotImplementedException();
-        }
+  
         //it is done!!
         public IResult updatePersonalInfo(PersonalInfoDto personalInfo)
         {
@@ -228,6 +243,114 @@ namespace Business.Concrete
                 context.SaveChanges();
                 return new SuccessResult(Messages.ApplyUpdatedInfo);
             }
+        }
+
+        public void addFile(FilesDtos b)
+        {
+
+       
+        }
+
+        public IResult getPdfFile(string[] docpaths)
+        {
+            //pdf sharp indir.
+            //microsoft office interop word indir.
+            var pdfpaths = new List<String>();
+            PdfDocument mergedPdf = new PdfDocument();
+
+
+            int docnum = 0;
+            foreach (string doc in docpaths)
+            {
+                docnum++;
+                string docnumstring;
+
+                var appWord = new Application();
+                if (appWord.Documents != null)
+                {
+
+
+                    var wordDocument = appWord.Documents.Open(doc);
+                    //şimdilik path ver her birini pdf'e çevir sonra silmeye bak
+                    docnumstring = docnum.ToString();
+                    string pdfDocName = @"C:\Users\Lenovo\Desktop\eko_formlari\pdfDocument" + docnumstring + ".pdf";
+
+                    if (wordDocument != null)
+                    {
+                        wordDocument.ExportAsFixedFormat(pdfDocName,
+                        WdExportFormat.wdExportFormatPDF);
+
+                        //merge işlemi
+                        PdfDocument pdfDoc = PdfReader.Open((pdfDocName), PdfDocumentOpenMode.Import);
+                        CopyPages(pdfDoc, mergedPdf);
+
+                        wordDocument.Close();
+                    }
+
+                }
+
+     
+
+            }
+            //path ver
+            mergedPdf.Save("path");
+            return new SuccessResult("başarılı");
+        }
+
+        public IResult updateFile(Entities.Concrete.Documents document)
+        {
+            //sadece path güncelleniyor.
+            using (EtikContext context = new EtikContext())
+            {
+
+                var doc = context.documents.SingleOrDefault(b => b.id == document.id);
+                if (doc == null)
+                {
+                    return new ErrorResult("Güncellenecek dosya bulunamadı");
+                }
+                else
+                {
+                    doc.doc_path = document.doc_path;
+
+                }
+
+                context.SaveChanges();
+                return new SuccessResult(Messages.PersonalUpdatedInfo);
+            }
+        }
+
+     
+        public static void CopyPages(PdfDocument from, PdfDocument to)
+        {
+            for (int i = 0; i < from.PageCount; i++)
+            {
+                to.AddPage(from.Pages[i]);
+            }
+        }
+        public IDataResult<List<ApplicationInfoWithUserDto>> GetAllApplicationforAdmin()
+        {
+            //başlık-status-tarih
+            //
+            using(EtikContext context =new EtikContext())
+            {
+                 
+               
+                    var result = from r in context.basvuru
+                                 join a in context.status_table on r.status equals a.id into ux
+                                 from a in ux.DefaultIfEmpty()
+                                
+                                 select new ApplicationInfoWithUserDto
+                                 {
+                                     id = r.Id,
+                                     basvuru_id = r.User_Id, //başvuran kişi
+                                     created = r.Zaman_Damgası,
+                                     status_id = a.id,
+                                     baslik = r.Baslik
+                                 };
+                    return new SuccessDataResult<List<ApplicationInfoWithUserDto>>(result.ToList());
+                }
+          
+
         }
     }
 }
