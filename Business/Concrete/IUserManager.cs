@@ -17,10 +17,9 @@ using Business.Constants;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using Microsoft.Office.Interop.Word;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Grpc.Core;
+
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -245,81 +244,120 @@ namespace Business.Concrete
             }
         }
 
-        public void addFile(FilesDtos b)
+        public IResult addFile(Entities.Concrete.Documents document, IFormFile file)
         {
+            using (EtikContext context = new EtikContext())
+            {   //get the info from resource 
 
-       
-        }
-
-        public IResult getPdfFile(string[] docpaths)
-        {
-            //pdf sharp indir.
-            //microsoft office interop word indir.
-            var pdfpaths = new List<String>();
-            PdfDocument mergedPdf = new PdfDocument();
-
-
-            int docnum = 0;
-            foreach (string doc in docpaths)
-            {
-                docnum++;
-                string docnumstring;
-
-                var appWord = new Application();
-                if (appWord.Documents != null)
+                var errors = new List<string>();
+                if (file == null || file.Length == 0)
                 {
-
-
-                    var wordDocument = appWord.Documents.Open(doc);
-                    //şimdilik path ver her birini pdf'e çevir sonra silmeye bak
-                    docnumstring = docnum.ToString();
-                    string pdfDocName = @"C:\Users\Lenovo\Desktop\eko_formlari\pdfDocument" + docnumstring + ".pdf";
-
-                    if (wordDocument != null)
-                    {
-                        wordDocument.ExportAsFixedFormat(pdfDocName,
-                        WdExportFormat.wdExportFormatPDF);
-
-                        //merge işlemi
-                        PdfDocument pdfDoc = PdfReader.Open((pdfDocName), PdfDocumentOpenMode.Import);
-                        CopyPages(pdfDoc, mergedPdf);
-
-                        wordDocument.Close();
-                    }
-
+                    return new ErrorResult("Dosya boş yüklenemez.");
                 }
 
-     
+                var extension = Path.GetExtension(file.FileName).Trim('.').ToLower();
+                if (!(new[] { "doc", "docx" }.Contains(extension)))
+                {
+                    return new ErrorResult("Dosya formatı hatalı.");
+                }
 
+                string document_path;
+                do
+                {
+                    //a random path is given
+                    string local_document_dir = @"C:\Users\Lenovo\Desktop\deneme";
+                    string randFileName = Path.GetRandomFileName();
+
+                    //give right extension format
+                    string filepath = Path.ChangeExtension(randFileName, Path.GetExtension(file.FileName));
+                    document_path = local_document_dir + @"\" + filepath;
+                } while (File.Exists(document_path));
+
+                //iffilepathexist get another path
+
+                //createing the file
+                Stream fileStream = new FileStream(document_path, FileMode.Create);
+                file.CopyTo(fileStream); ;
+
+                //document.doc_type = doc_type
+                document.doc_path = document_path;
+
+                Entities.Concrete.Documents doc = new Entities.Concrete.Documents()
+                {
+                    basvuru_id = document.basvuru_id,
+                    doc_type = document.doc_type,
+                    doc_path = document.doc_path
+
+                };
+                context.documents.Add(doc);
+                context.SaveChanges();
+
+                return new SuccessResult("Dosya başarı ile yüklendi.");
             }
-            //path ver
-            mergedPdf.Save("path");
-            return new SuccessResult("başarılı");
         }
 
-        public IResult updateFile(Entities.Concrete.Documents document)
+        public IResult updateFile(Entities.Concrete.Documents document, IFormFile file)
         {
             //sadece path güncelleniyor.
             using (EtikContext context = new EtikContext())
             {
 
+                var errors = new List<string>();
+                if (file == null || file.Length == 0)
+                {
+                    //hata ver
+                }
+
+                var extension = Path.GetExtension(file.FileName).Trim('.').ToLower();
+                if (!(new[] { "doc", "docx" }.Contains(extension)))
+                {
+                    //hata ver
+                }
+
+                string document_path;
+                do
+                {
+                    //a random path is given
+                    string local_document_dir = @"C:\Users\Lenovo\Desktop\deneme";
+                    string randFileName = Path.GetRandomFileName();
+
+                    //give right extension format
+                    string filepath = Path.ChangeExtension(randFileName, Path.GetExtension(file.FileName));
+                    document_path = local_document_dir + @"\" + filepath;
+                } while (File.Exists(document_path));
+
+                //iffilepathexist get another path
+
+
+
+                Stream fileStream = new FileStream(document_path, FileMode.Create);
+                file.CopyTo(fileStream); ;
+
+                document.doc_path = document_path;
+
+
                 var doc = context.documents.SingleOrDefault(b => b.id == document.id);
+
+                //önceki dosyayı sil (İkinci seferde hata veriyor?)
+                File.Delete(doc.doc_path);
+
                 if (doc == null)
                 {
-                    return new ErrorResult("Güncellenecek dosya bulunamadı");
+                    return new ErrorResult("Güncellenecek dosya bulunamadı.");
                 }
                 else
                 {
+
                     doc.doc_path = document.doc_path;
 
                 }
 
                 context.SaveChanges();
-                return new SuccessResult(Messages.PersonalUpdatedInfo);
+                return new SuccessResult("Dosya başarı ile güncellendi.");
             }
         }
 
-     
+
         public static void CopyPages(PdfDocument from, PdfDocument to)
         {
             for (int i = 0; i < from.PageCount; i++)
@@ -351,6 +389,20 @@ namespace Business.Concrete
                 }
           
 
+        }
+
+        public IResult getFeedbackforGuest(Users u)
+        {
+
+            using(EtikContext context=new EtikContext())
+            {
+                var result=context.users.SingleOrDefault(p=>p.Id == u.Id);
+                if (result.User_Type == 3)
+                {
+
+                }
+            }
+            throw new NotImplementedException();
         }
     }
 }

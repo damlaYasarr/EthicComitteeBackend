@@ -2,6 +2,7 @@
 using Core.Utilities.Result;
 using Entities.Concrete;
 using Entities.Dtos;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,14 +34,14 @@ namespace Business.Abstract
         void addPersonalInfo(PersonalInfoDto personalInfo);//-->DONE
         void addApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
 
-        void addFile(FilesDtos b);//7 tane word dosyası eklenir sırayla-- bu
-        public IResult getPdfFile(string[] docpaths);//bu işlemde 7 word dosyası bir pdf'e dönüşür.
-        public IResult updateFile(Entities.Concrete.Documents document);
+        IResult updateFile(Entities.Concrete.Documents document, IFormFile file);
+        public IResult addFile(Entities.Concrete.Documents document, IFormFile file);
 
         IResult updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. -->DONE
         IResult updateApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
 
-
+        IResult getFeedbackforGuest(Users u);
+        IResult AddFeedBackforGuest(Users u);
 
         //adminin yapacağı işlemler
         IDataResult<List<ApplicationInfoWithUserDto>> GetAllApplicationforAdmin();//tüm userları başvurularıyla getir getir 
