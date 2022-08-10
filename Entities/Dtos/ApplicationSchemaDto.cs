@@ -10,7 +10,7 @@ namespace Entities.Dtos
     {
         public int id { get; set; }
         public int user_id { get; set; }//kimin başvurusu bu?
-        public DateTime Created { get; set; }
+       // public DateTime Created { get; set; }
         public int status { get; set; } 
         public string baslik { get; set; }  
     }

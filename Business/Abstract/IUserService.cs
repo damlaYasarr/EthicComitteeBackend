@@ -2,6 +2,7 @@
 using Core.Utilities.Result;
 using Entities.Concrete;
 using Entities.Dtos;
+using Lucene.Net.Support;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -30,18 +31,20 @@ namespace Business.Abstract
         
         List<PersonalInfoDto> GetUserDetails();//-->DONE
 
+        public HashMap<string, int> getConfirmationCount();
+        public HashMap<string, int> getApplicationCount();
 
         void addPersonalInfo(PersonalInfoDto personalInfo);//-->DONE
         void addApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
 
-        IResult updateFile(Entities.Concrete.Documents document, IFormFile file);
-        public IResult addFile(Entities.Concrete.Documents document, IFormFile file);
+        public IResult updateFile(int file_id, IFormFile file);
+        public IResult addFile(int basvuru_id, int file_type, IFormFile file);
 
         IResult updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. -->DONE
         IResult updateApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
 
-        IResult getFeedbackforGuest(Users u);
-        IResult AddFeedBackforGuest(Users u);
+        string getFeedbackforGuest(int userid);//
+        IResult AddFeedBackforGuest(feedbackDto f);
 
         //adminin yapacağı işlemler
         IDataResult<List<ApplicationInfoWithUserDto>> GetAllApplicationforAdmin();//tüm userları başvurularıyla getir getir 

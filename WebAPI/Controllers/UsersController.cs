@@ -92,5 +92,23 @@ namespace WebAPI.Controllers
             var result = _userService.GetAllApplicationforAdmin();
             return Ok(result);
         }
+        [HttpPost("addfeedback")]
+        public ActionResult AddFeedback(feedbackDto f)
+        {
+           var result= _userService.AddFeedBackforGuest(f);
+            return Ok(result);
+        }
+        [HttpGet("getfeedback")]
+        public IActionResult getfeedback(int u)
+        {
+            var result = _userService.getFeedbackforGuest(u);
+            return Ok(result);
+        }
+        [HttpGet("getcount")]
+        public IActionResult getcount()
+        {
+            var result = _userService.getConfirmationCount();
+            return Ok(result);
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace Core.Concrete.EntityFramework
         public DbSet<KurumTable> kurum_table { get; set; }
         public DbSet<ArastirmaNiteligi> arastirma_niteligi { get; set; }
         public DbSet<Documents> documents { get; set; }
-        public DbSet<Doc_Type> doctype { get; set; }
+        public DbSet<Doc_Type> doc_type { get; set; }
 
 
 

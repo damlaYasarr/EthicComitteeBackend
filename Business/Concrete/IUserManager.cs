@@ -20,6 +20,8 @@ using Microsoft.Office.Interop.Word;
 
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
+using Lucene.Net.Support;
 
 namespace Business.Concrete
 {
@@ -39,7 +41,7 @@ namespace Business.Concrete
                     Baslik = applyInfo.Baslik,
                     Ozet = applyInfo.Ozet,
                     Aciklama = applyInfo.Aciklama,
-                    arastirma_niteligi_id = applyInfo.arastirma_niteligi_id
+                    arastirma_niteligi = applyInfo.arastirma_niteligi_id
                     
 
                 };
@@ -64,7 +66,7 @@ namespace Business.Concrete
                     Uzmanlık_Alani=personalInfo.Uzmanlık_Alani,
                     Tckn = personalInfo.Tckn,
                     Eposta = personalInfo.Eposta,
-                   // Parola_id = personalInfo.parola,
+                    Parola_id = personalInfo.parola,
                     Kurumu = personalInfo.Kurumu
                 };
                 context.users.Add(user);
@@ -148,7 +150,7 @@ namespace Business.Concrete
                                  {
                                      id = r.Id,
                                      user_id = r.User_Id,
-                                     Created = r.Zaman_Damgası,
+                                     //Created = r.Zaman_Damgası,
                                      status = u.id,
                                      baslik = r.Baslik
                                  };
@@ -237,18 +239,18 @@ namespace Business.Concrete
                     applyDetail.Baslik = applyInfo.Baslik;
                     applyDetail.Ozet = applyInfo.Ozet;
                     applyDetail.Aciklama = applyInfo.Aciklama;
-                    applyDetail.arastirma_niteligi_id = applyInfo.arastirma_niteligi_id;
+                    applyDetail.arastirma_niteligi = applyInfo.arastirma_niteligi_id;
                 }
                 context.SaveChanges();
                 return new SuccessResult(Messages.ApplyUpdatedInfo);
             }
         }
 
-        public IResult addFile(Entities.Concrete.Documents document, IFormFile file)
+        public IResult addFile(int basvuru_id, int file_type, IFormFile file)
         {
             using (EtikContext context = new EtikContext())
-            {   //get the info from resource 
-
+            {
+                // dosya formatı ve null olması sorgulanır
                 var errors = new List<string>();
                 if (file == null || file.Length == 0)
                 {
@@ -265,12 +267,9 @@ namespace Business.Concrete
                 do
                 {
                     //a random path is given
-                    string local_document_dir = @"C:\Users\Lenovo\Desktop\deneme";
-                    string randFileName = Path.GetRandomFileName();
-
-                    //give right extension format
-                    string filepath = Path.ChangeExtension(randFileName, Path.GetExtension(file.FileName));
-                    document_path = local_document_dir + @"\" + filepath;
+                    string local_document_dir = Directory.GetCurrentDirectory();
+                    string filename = Guid.NewGuid().ToString();
+                    document_path = local_document_dir + @"\" + filename + ".pdf";
                 } while (File.Exists(document_path));
 
                 //iffilepathexist get another path
@@ -279,26 +278,29 @@ namespace Business.Concrete
                 Stream fileStream = new FileStream(document_path, FileMode.Create);
                 file.CopyTo(fileStream); ;
 
-                //document.doc_type = doc_type
-                document.doc_path = document_path;
+
+
 
                 Entities.Concrete.Documents doc = new Entities.Concrete.Documents()
                 {
-                    basvuru_id = document.basvuru_id,
-                    doc_type = document.doc_type,
-                    doc_path = document.doc_path
+                    basvuru_id = basvuru_id,
+                    doc_type = file_type,
+                    doc_path = document_path
 
                 };
                 context.documents.Add(doc);
                 context.SaveChanges();
 
                 return new SuccessResult("Dosya başarı ile yüklendi.");
+
+
+
             }
         }
 
-        public IResult updateFile(Entities.Concrete.Documents document, IFormFile file)
+        public IResult updateFile(int file_id, IFormFile file)
         {
-            //sadece path güncelleniyor.
+            //burada sadece path güncelleniyor.
             using (EtikContext context = new EtikContext())
             {
 
@@ -318,12 +320,10 @@ namespace Business.Concrete
                 do
                 {
                     //a random path is given
-                    string local_document_dir = @"C:\Users\Lenovo\Desktop\deneme";
-                    string randFileName = Path.GetRandomFileName();
+                    string local_document_dir = Directory.GetCurrentDirectory();
+                    string filename = Guid.NewGuid().ToString();
+                    document_path = local_document_dir + @"\" + filename + ".pdf";
 
-                    //give right extension format
-                    string filepath = Path.ChangeExtension(randFileName, Path.GetExtension(file.FileName));
-                    document_path = local_document_dir + @"\" + filepath;
                 } while (File.Exists(document_path));
 
                 //iffilepathexist get another path
@@ -333,12 +333,12 @@ namespace Business.Concrete
                 Stream fileStream = new FileStream(document_path, FileMode.Create);
                 file.CopyTo(fileStream); ;
 
-                document.doc_path = document_path;
 
 
-                var doc = context.documents.SingleOrDefault(b => b.id == document.id);
 
-                //önceki dosyayı sil (İkinci seferde hata veriyor?)
+                var doc = context.documents.SingleOrDefault(b => b.id == file_id);
+
+                //önceki dosyayı sil
                 File.Delete(doc.doc_path);
 
                 if (doc == null)
@@ -348,7 +348,7 @@ namespace Business.Concrete
                 else
                 {
 
-                    doc.doc_path = document.doc_path;
+                    doc.doc_path = document_path;
 
                 }
 
@@ -358,6 +358,110 @@ namespace Business.Concrete
         }
 
 
+
+        public void toPdfFile(int apply_id, int pdf_type)
+        {
+
+
+            using (EtikContext context = new EtikContext())
+            {
+                var worddocumentpaths = new List<String>();
+
+                //doc tipi sayısı alınır
+                var doctype = context.doc_type;
+
+                foreach (var item in doctype)
+                {
+                    Entities.Concrete.Documents file = context.documents.SingleOrDefault
+                           (b => (b.basvuru_id == apply_id) && (b.doc_type == item.id));
+
+                    if (file != null && File.Exists(file.doc_path) && file.doc_type != pdf_type)
+                    {
+                        worddocumentpaths.Add(file.doc_path);
+                        //Console.WriteLine(file.doc_path);
+                        //Console.WriteLine(file.id);
+
+                    }
+                }
+
+
+
+                //basvurudaki tüm dosyaları pathlarını listeye ekle
+                PdfDocument mergedPdf = new PdfDocument();
+
+                //word to pdf
+                int docnum = 0;
+                foreach (string file in worddocumentpaths)
+                {
+                    docnum++;
+                    string docnumstring;
+
+                    var appWord = new Application();
+                    if (appWord.Documents != null)
+                    {
+
+
+                        var wordDocument = appWord.Documents.Open(file);
+                        //path 
+                        docnumstring = docnum.ToString();
+                        string local_document_dir = Directory.GetCurrentDirectory();
+                        string filenamea = Guid.NewGuid().ToString();
+                        string pdfDocName = local_document_dir + @"\" + filenamea + ".pdf";
+
+                        if (wordDocument != null)
+                        {
+                            wordDocument.ExportAsFixedFormat(pdfDocName,
+                            WdExportFormat.wdExportFormatPDF);
+
+                            //merge işlemi
+                            PdfDocument pdfDoc = PdfReader.Open((pdfDocName), PdfDocumentOpenMode.Import);
+                            CopyPages(pdfDoc, mergedPdf);
+
+                            wordDocument.Close();
+                        }
+                        File.Delete(pdfDocName);
+
+                    }
+
+
+
+                }
+
+                //merged pdf için path oluştur
+                string document_path;
+                do
+                {
+                    //a random path is given
+
+                    string local_document_dir = Directory.GetCurrentDirectory();
+                    string filenameb = Guid.NewGuid().ToString();
+                    document_path = local_document_dir + @"\" + filenameb + ".pdf";
+                } while (File.Exists(document_path));
+
+
+                mergedPdf.Save(document_path);
+
+                //veritabanına kayıt
+
+
+
+                Entities.Concrete.Documents doc = new Entities.Concrete.Documents()
+                {
+                    basvuru_id = apply_id,
+                    doc_type = pdf_type,
+                    doc_path = document_path
+
+                };
+
+                context.documents.Add(doc);
+                context.SaveChanges();
+
+            }
+
+
+
+        }
+
         public static void CopyPages(PdfDocument from, PdfDocument to)
         {
             for (int i = 0; i < from.PageCount; i++)
@@ -365,6 +469,9 @@ namespace Business.Concrete
                 to.AddPage(from.Pages[i]);
             }
         }
+
+
+
         public IDataResult<List<ApplicationInfoWithUserDto>> GetAllApplicationforAdmin()
         {
             //başlık-status-tarih
@@ -381,7 +488,7 @@ namespace Business.Concrete
                                  {
                                      id = r.Id,
                                      basvuru_id = r.User_Id, //başvuran kişi
-                                     created = r.Zaman_Damgası,
+                                    // created = r.Zaman_Damgası,
                                      status_id = a.id,
                                      baslik = r.Baslik
                                  };
@@ -391,18 +498,118 @@ namespace Business.Concrete
 
         }
 
-        public IResult getFeedbackforGuest(Users u)
+
+
+       public string getFeedbackforGuest(int userid)
         {
 
             using(EtikContext context=new EtikContext())
             {
-                var result=context.users.SingleOrDefault(p=>p.Id == u.Id);
-                if (result.User_Type == 3)
-                {
-
-                }
+                var result = context.users.SingleOrDefault(b => b.Id == userid);
+                if (result == null) return null;
+               
+                return result.Feedback;
             }
-            throw new NotImplementedException();
+            
         }
+
+        public HashMap<string, int> getConfirmationCount()
+        { 
+            int temp = 0;
+            HashMap<string, int> hmap = new HashMap<string, int>();
+            using (EtikContext context= new EtikContext())
+            {
+               
+                var query = from x in context.basvuru
+                            join t in context.etik_kurul on x.Onerilen_Etik_Kurulu equals t.Id into ux
+                            from t in ux.DefaultIfEmpty()
+                            where x.status == 2//onaylanan sayısı
+                            orderby x.status
+                          
+                            select new
+                            {   
+                                Key=x.Id,
+                                Type = t.Etik_Kurul_Adi,
+                                Count = context.basvuru.Where(i=>i.Onerilen_Etik_Kurulu .Equals(t.Id)).Count(), 
+                            };
+        
+                temp= query.Count();
+               
+                foreach(var item in query)
+                {
+                    hmap.Add(item.Type, item.Count);
+                }
+
+            }
+            return hmap;
+
+        }
+
+        public HashMap<string, int> getApplicationCount()
+        {
+            int temp = 0;
+            HashMap<string, int> hmap = new HashMap<string, int>();
+            using (EtikContext context = new EtikContext())
+            {
+
+                var query = from x in context.basvuru
+                            join t in context.etik_kurul on x.Onerilen_Etik_Kurulu equals t.Id into ux
+                            from t in ux.DefaultIfEmpty()
+                            where x.status == 3 //onaylanma bekleyen sayısı
+                            orderby x.status
+
+                            select new
+                            {
+                                Key = x.Id,
+                                Type = t.Etik_Kurul_Adi,
+                                Count = context.basvuru.Where(i => i.Onerilen_Etik_Kurulu.Equals(t.Id)).Count(),
+                            };
+
+                temp = query.Count();
+
+                foreach (var item in query)
+                {
+                    hmap.Add(item.Type, item.Count);
+                }
+
+            }
+            return hmap;
+        }
+
+        public IResult AddFeedBackforGuest(feedbackDto k)
+        {
+            using (EtikContext context = new EtikContext())
+            {
+                var user = context.users.SingleOrDefault(b => b.Id == k.id);
+             
+                if (user == null)
+                {
+                    return new ErrorResult("böyle bir kullanıcı yok");
+                }
+                else
+                {
+                    if (user.User_Type == 3)//kullanıcı birden fazla feedback yollayabilir m?
+                    {
+                        user.Id = k.id;
+                        user.Feedback = k.feedback;
+                    }
+                    else
+                    {
+                        return new ErrorResult("feed back göndermeye yetkili değilsiniz");
+                    }
+
+                    context.SaveChanges();
+                }
+             
+
+            }
+
+            return new SuccessResult("hey başarılı");
+        }
+
+
+
+
+
     }
 }
