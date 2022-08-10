@@ -37,8 +37,10 @@ namespace Business.Abstract
         void addPersonalInfo(PersonalInfoDto personalInfo);//-->DONE
         void addApplicationInfo(ApplyInfoDto applyInfo);//-->DONE
 
-        public IResult updateFile(int file_id, IFormFile file);
-        public IResult addFile(int basvuru_id, int file_type, IFormFile file);
+         IResult updateFile(int file_id, IFormFile file);
+         IResult addFile(int basvuru_id, int file_type, IFormFile file);
+         string GetFilePath(int file_id);
+        void toPdfFile(int apply_id, int pdf_type);
 
         IResult updatePersonalInfo(PersonalInfoDto personalInfo); //aynı kişinin blgileri gelmeli. -->DONE
         IResult updateApplicationInfo(ApplyInfoDto applyInfo);//-->DONE

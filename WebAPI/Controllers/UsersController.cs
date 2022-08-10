@@ -110,5 +110,48 @@ namespace WebAPI.Controllers
             var result = _userService.getConfirmationCount();
             return Ok(result);
         }
+        [HttpPost("AddFiles")]
+
+        public IActionResult AddDoc(int basvuru_id, int file_type, IFormFile file)
+        {
+            _userService.addFile(basvuru_id, file_type, file);
+            return Ok("Dosya eklendi.");
+
+
+        }
+
+        [HttpPost("UpdateFiles")]
+        public IActionResult UpdateDoc(int file_id, IFormFile file)
+        {
+            _userService.updateFile(file_id, file);
+
+            return Ok("Dosya değiştirildi.");
+        }
+
+
+        [HttpPost("toPdf")]
+        public IActionResult toPdf(int apply_id, int pdf_type)
+        {
+            _userService.toPdfFile(apply_id, pdf_type);
+
+            return Ok("Pdf dosyası oluşturuldu.");
+        }
+
+        [HttpGet("GetDocument")]
+        public IActionResult GetDoc(int file_id)
+        {
+            string file_path = _userService.GetFilePath(file_id));
+
+            if (file_path != null)
+            {
+                byte[] document = System.IO.File.ReadAllBytes(file_path);
+                return Ok(document);
+            }
+            else {
+                return BadRequest("Dosya bulunamadı.");
+                    }
+
+        }
+
     }
 }

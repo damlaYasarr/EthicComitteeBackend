@@ -246,6 +246,16 @@ namespace Business.Concrete
             }
         }
 
+       
+
+        public static void CopyPages(PdfDocument from, PdfDocument to)
+        {
+            for (int i = 0; i < from.PageCount; i++)
+            {
+                to.AddPage(from.Pages[i]);
+            }
+        }
+
         public IResult addFile(int basvuru_id, int file_type, IFormFile file)
         {
             using (EtikContext context = new EtikContext())
@@ -264,15 +274,11 @@ namespace Business.Concrete
                 }
 
                 string document_path;
-                do
-                {
-                    //a random path is given
-                    string local_document_dir = Directory.GetCurrentDirectory();
-                    string filename = Guid.NewGuid().ToString();
-                    document_path = local_document_dir + @"\" + filename + ".pdf";
-                } while (File.Exists(document_path));
+                //a random path is given
+                string local_document_dir = Directory.GetCurrentDirectory();
+                string filename = Guid.NewGuid().ToString();
+                document_path = local_document_dir + @"\" + filename + ".pdf";
 
-                //iffilepathexist get another path
 
                 //createing the file
                 Stream fileStream = new FileStream(document_path, FileMode.Create);
@@ -307,24 +313,21 @@ namespace Business.Concrete
                 var errors = new List<string>();
                 if (file == null || file.Length == 0)
                 {
-                    //hata ver
+                    return new ErrorResult("Dosya boş yüklenemez.");
                 }
 
                 var extension = Path.GetExtension(file.FileName).Trim('.').ToLower();
                 if (!(new[] { "doc", "docx" }.Contains(extension)))
                 {
-                    //hata ver
+                    return new ErrorResult("Dosya formatı hatalı.");
                 }
 
                 string document_path;
-                do
-                {
-                    //a random path is given
-                    string local_document_dir = Directory.GetCurrentDirectory();
-                    string filename = Guid.NewGuid().ToString();
-                    document_path = local_document_dir + @"\" + filename + ".pdf";
 
-                } while (File.Exists(document_path));
+                //a random path is given
+                string local_document_dir = Directory.GetCurrentDirectory();
+                string filename = Guid.NewGuid().ToString();
+                document_path = local_document_dir + @"\" + filename + ".pdf";
 
                 //iffilepathexist get another path
 
@@ -362,7 +365,7 @@ namespace Business.Concrete
         public void toPdfFile(int apply_id, int pdf_type)
         {
 
-
+            //servera office yükle
             using (EtikContext context = new EtikContext())
             {
                 var worddocumentpaths = new List<String>();
@@ -462,15 +465,24 @@ namespace Business.Concrete
 
         }
 
-        public static void CopyPages(PdfDocument from, PdfDocument to)
+        public string GetFilePath(int file_id)
         {
-            for (int i = 0; i < from.PageCount; i++)
+            using (EtikContext context = new EtikContext())
             {
-                to.AddPage(from.Pages[i]);
+                var file = context.documents.SingleOrDefault(b => b.id == file_id);
+
+                if (file != null)
+                {
+                    return file.doc_path;
+
+                }
+                else
+                {
+                    return null;
+                }
+
             }
         }
-
-
 
         public IDataResult<List<ApplicationInfoWithUserDto>> GetAllApplicationforAdmin()
         {

@@ -18,7 +18,7 @@ namespace Entities.Concrete
         //public DateTime Zaman_Damgası { get; set; }
         public int? status { get; set; }
         public int? arastirma_niteligi { get; set; }
-     
+        
 
     }
 }
