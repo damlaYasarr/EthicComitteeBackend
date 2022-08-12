@@ -27,6 +27,8 @@ namespace Business.Concrete
 {
     public class IUserManager : IUserService
     {
+        //başvuru tarihi ne zaman oluşmalı? dosyayı yolladığında başvuru tarihi oluşması mı gerekir? 
+
         //it is DONE!
         public void addApplicationInfo(ApplyInfoDto applyInfo)
         {
@@ -150,7 +152,7 @@ namespace Business.Concrete
                                  {
                                      id = r.Id,
                                      user_id = r.User_Id,
-                                     //Created = r.Zaman_Damgası,
+                                     Created = r.Zaman_Damgası,
                                      status = u.id,
                                      baslik = r.Baslik
                                  };
@@ -261,7 +263,7 @@ namespace Business.Concrete
             using (EtikContext context = new EtikContext())
             {
                 // dosya formatı ve null olması sorgulanır
-                var errors = new List<string>();
+              ;
                 if (file == null || file.Length == 0)
                 {
                     return new ErrorResult("Dosya boş yüklenemez.");
@@ -277,7 +279,7 @@ namespace Business.Concrete
                 //a random path is given
                 string local_document_dir = Directory.GetCurrentDirectory();
                 string filename = Guid.NewGuid().ToString();
-                document_path = local_document_dir + @"\" + filename + ".pdf";
+                document_path = local_document_dir + @"\" + filename + "." + extension;
 
 
                 //createing the file
@@ -310,7 +312,7 @@ namespace Business.Concrete
             using (EtikContext context = new EtikContext())
             {
 
-                var errors = new List<string>();
+                
                 if (file == null || file.Length == 0)
                 {
                     return new ErrorResult("Dosya boş yüklenemez.");
@@ -327,7 +329,7 @@ namespace Business.Concrete
                 //a random path is given
                 string local_document_dir = Directory.GetCurrentDirectory();
                 string filename = Guid.NewGuid().ToString();
-                document_path = local_document_dir + @"\" + filename + ".pdf";
+                document_path = local_document_dir + @"\" + filename + "."+extension;
 
                 //iffilepathexist get another path
 
@@ -393,11 +395,10 @@ namespace Business.Concrete
                 PdfDocument mergedPdf = new PdfDocument();
 
                 //word to pdf
-                int docnum = 0;
+              
                 foreach (string file in worddocumentpaths)
                 {
-                    docnum++;
-                    string docnumstring;
+                    
 
                     var appWord = new Application();
                     if (appWord.Documents != null)
@@ -406,7 +407,7 @@ namespace Business.Concrete
 
                         var wordDocument = appWord.Documents.Open(file);
                         //path 
-                        docnumstring = docnum.ToString();
+                   
                         string local_document_dir = Directory.GetCurrentDirectory();
                         string filenamea = Guid.NewGuid().ToString();
                         string pdfDocName = local_document_dir + @"\" + filenamea + ".pdf";
@@ -537,7 +538,6 @@ namespace Business.Concrete
                             from t in ux.DefaultIfEmpty()
                             where x.status == 2//onaylanan sayısı
                             orderby x.status
-                          
                             select new
                             {   
                                 Key=x.Id,

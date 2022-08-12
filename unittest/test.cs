@@ -1,14 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Business.Abstract
 using System;
 
 namespace unittest
 {
     [TestClass]
-    public class test
+    public class Test
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Test_GetUsersDetailsMetot()
         {
+            IUserService us = new IUserService();
+
+
         }
     }
 }

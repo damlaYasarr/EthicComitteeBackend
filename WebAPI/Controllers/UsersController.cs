@@ -52,13 +52,13 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result.Success);
         }
-        [HttpPost("addguest")]
+        [HttpPost("addpersonalInfo")]
         public ActionResult AddNewGuest(PersonalInfoDto users)
         {
           _userService.addPersonalInfo(users);
             return Ok("eklenme başarılı");
         }
-        [HttpPost("postapp")]
+        [HttpPost("AddApplyDetail")]
         public ActionResult PostApplyInfo(ApplyInfoDto applyInfo)
         {
              _userService.addApplicationInfo(applyInfo);
@@ -140,7 +140,7 @@ namespace WebAPI.Controllers
         [HttpGet("GetDocument")]
         public IActionResult GetDoc(int file_id)
         {
-            string file_path = _userService.GetFilePath(file_id));
+            string file_path = _userService.GetFilePath(file_id);
 
             if (file_path != null)
             {
@@ -149,7 +149,7 @@ namespace WebAPI.Controllers
             }
             else {
                 return BadRequest("Dosya bulunamadı.");
-                    }
+                  }
 
         }
 

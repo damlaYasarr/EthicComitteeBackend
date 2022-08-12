@@ -15,7 +15,7 @@ namespace Entities.Concrete
         public int? Onerilen_Etik_Kurulu { get; set; }
         public int? Calisma_Alanı { get; set; }
         public string Aciklama { get; set; }
-        //public DateTime Zaman_Damgası { get; set; }
+        public DateTime Zaman_Damgası { get; set; }
         public int? status { get; set; }
         public int? arastirma_niteligi { get; set; }
         
